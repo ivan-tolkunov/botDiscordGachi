@@ -4,12 +4,6 @@ import asyncio
 import pyttsx3
 import os
 
-engine = pyttsx3.init()
-
-voices = engine.getProperty('voices')
-
-engine.setProperty('voice', 'ru')
-
 WORDS = {"соси" : [None, "Sam sosi XD"],
          "фистинг" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"]
 
@@ -92,10 +86,6 @@ class MyClient(discord.Client):
                                     await self.play_sound(item, "sound")
                         else:
                             await message.channel.send(item)
-                            if self.current_channel != None:
-                                engine.save_to_file(item,"E:/BotPy/Gachi Bot/sounds/message.mp3") 
-                                await self.play_sound("message.mp3", "sound")
-                                engine.runAndWait()
                         i+=1
             if "play" in message.content.lower():
                 content = message.content.lower()[5:]
