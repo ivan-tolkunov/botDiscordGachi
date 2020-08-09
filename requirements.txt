@@ -6,3 +6,4 @@ chardet
 flask
 pyttsx3
 gunicorn
+PyNaCl 

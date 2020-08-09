@@ -9,7 +9,7 @@ WORDS = {"соси" : [None, "Sam sosi XD"],
 
 }
 
-MAIN_PATH = "E:/BotPy/Gachi Bot/sounds/"
+MAIN_PATH = "sounds/"
 
 class MyClient(discord.Client):
 
