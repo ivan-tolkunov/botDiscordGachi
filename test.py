@@ -1,9 +1,8 @@
 import discord
-# import youtube_dl
 from discord.ext import commands
-from bot_conf import *
 import asyncio
 import pyttsx3
+import os
 
 engine = pyttsx3.init()
 
@@ -114,4 +113,4 @@ client = MyClient()
 #     player = await voice_client.create_ytdl_player(url)
 #     player.start()
 
-client.run(TOKEN)
+token = os.environ.get('BOT_TOKEN')
