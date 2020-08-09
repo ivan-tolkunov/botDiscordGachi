@@ -1,0 +1,5 @@
+discord.py
+asyncio
+flask
+pyttsx3
+gunicorn
