@@ -114,3 +114,4 @@ client = MyClient()
 #     player.start()
 
 token = os.environ.get('BOT_TOKEN')
+client.run(str(token))
