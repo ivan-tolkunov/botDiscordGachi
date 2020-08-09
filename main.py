@@ -113,4 +113,5 @@ client = MyClient()
 #     player = await voice_client.create_ytdl_player(url)
 #     player.start()
 
-client.run("NzQxNjI4OTk1NTM5NDM1NTMw.Xy6V0w.WY-grjsYX9IDyfxjT63W2jAmarM")
+token = os.environ.get("BOT_TOKEN")
+client.run(str(token))
