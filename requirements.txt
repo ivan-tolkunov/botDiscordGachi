@@ -1,5 +1,8 @@
 discord.py
 asyncio
+aiohttp
+websockets
+chardet
 flask
 pyttsx3
 gunicorn
