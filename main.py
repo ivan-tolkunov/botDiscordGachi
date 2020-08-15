@@ -61,11 +61,11 @@ class MyClient(discord.Client):
         if self.voice != None:
             if typ == "sound":
                 # print(f"{MAIN_PATH}{content}")
-                self.voice.play(discord.FFmpegPCMAudio(executable='./ffmpeg', source=f"{MAIN_PATH}{content}"))
+                self.voice.play(discord.FFmpegPCMAudio(executable='/ffmpeg', source=f"{MAIN_PATH}{content}"))
                 while self.voice.is_playing():
                     await asyncio.sleep(.1)
             elif typ == "music":
-                self.voice.play(discord.FFmpegPCMAudio(executable='./ffmpeg', source=f"{content}"))
+                self.voice.play(discord.FFmpegPCMAudio(executable='/ffmpeg', source=f"{content}"))
                 while self.voice.is_playing():
                     await asyncio.sleep(.1)
                 
