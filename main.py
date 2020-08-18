@@ -125,7 +125,7 @@ class MyClient(discord.Client):
                                 k=0
                                 while k<=2:
                                     tts = _TTS()
-                                    tts.start(item)
+                                    await tts.start(item)
                                     del(tts)
                                     k+=1
                                 await self.play_sound("message.wav", "message")
