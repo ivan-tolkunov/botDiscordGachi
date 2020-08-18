@@ -50,7 +50,7 @@ WORDS = {"соси" : [None, "Sam sosi XD"],
 
 }
 
-MAIN_PATH = "$HOME/botDiscordGachi/sounds/"
+MAIN_PATH = "/home/linaro/botDiscordGachi/sounds/"
 
 class MyClient(discord.Client):
 
