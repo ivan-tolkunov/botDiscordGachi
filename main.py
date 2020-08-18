@@ -22,7 +22,7 @@ class _TTS:
         self.engine = pyttsx3.init()
 
 
-    def start(self,text_):
+    async def start(self,text_):
         self.engine.save_to_file(text_,"sounds/message.wav")
         self.engine.runAndWait()
 
@@ -122,9 +122,12 @@ class MyClient(discord.Client):
                                 # print("created")
                                 # engine.runAndWait() 
                                 # print("run")
-                                tts = _TTS()
-                                tts.start(item)
-                                del(tts)
+                                k=0
+                                while k<=2:
+                                    tts = _TTS()
+                                    tts.start(item)
+                                    del(tts)
+                                    k+=1
                                 await self.play_sound("message.wav", "message")
                         i+=1
             if "play" in message.content.lower():
