@@ -13,6 +13,21 @@ voices = engine.getProperty('voices')
 
 # engine.setProperty('voice', 'ru')
 
+
+
+class _TTS:
+
+    engine = None
+    def __init__(self):
+        self.engine = pyttsx3.init()
+
+
+    def start(self,text_):
+        self.engine.save_to_file(text_,"sounds/message.wav")
+        self.engine.runAndWait()
+
+
+
 WORDS = {"соси" : [None, "Sam sosi XD"],
          "фистинг" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"]
 
@@ -103,10 +118,13 @@ class MyClient(discord.Client):
                         else:
                             await message.channel.send(item)
                             if self.current_channel != None:
-                                engine.save_to_file(item,"sounds/message.wav")
-                                print("created")
-                                engine.runAndWait() 
-                                print("run")
+                                # engine.save_to_file(item,"sounds/message.wav")
+                                # print("created")
+                                # engine.runAndWait() 
+                                # print("run")
+                                tts = _TTS()
+                                tts.start(item)
+                                del(tts)
                                 await self.play_sound("message.wav", "message")
                         i+=1
             if "play" in message.content.lower():
