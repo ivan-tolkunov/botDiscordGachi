@@ -122,12 +122,10 @@ class MyClient(discord.Client):
                                 # print("created")
                                 # engine.runAndWait() 
                                 # print("run")
-                                k=0
-                                while k<=2:
-                                    tts = _TTS()
-                                    await tts.start(item)
-                                    del(tts)
-                                    k+=1
+                                tts = _TTS()
+                                await tts.start(item)
+                                print(2)
+                                del(tts)
                                 await self.play_sound("message.wav", "message")
                         i+=1
             if "play" in message.content.lower():
