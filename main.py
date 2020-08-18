@@ -3,7 +3,9 @@
 
 
 # Надо для работы в линуксе русских символов
-from /home/linaro/token.py import BOT_TOKEN
+import sys
+sys.path.insert(1, '/home/linaro/')
+from token import BOT_TOKEN
 
 import discord
 import asyncio
