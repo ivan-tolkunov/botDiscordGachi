@@ -66,10 +66,10 @@ class MyClient(discord.Client):
                 self.voice.play(discord.FFmpegPCMAudio(source=f"{MAIN_PATH}{content}"))
                 while self.voice.is_playing():
                     await asyncio.sleep(.1)
-            elif typ == "music":
-                self.voice.play(discord.FFmpegPCMAudio(source=f"{content}"))
-                while self.voice.is_playing():
-                    await asyncio.sleep(.1)
+            # elif typ == "music":
+            #     self.voice.play(discord.FFmpegPCMAudio(source=f"{content}"))
+            #     while self.voice.is_playing():
+            #         await asyncio.sleep(.1)
                 
 
         else:
@@ -88,6 +88,10 @@ class MyClient(discord.Client):
                                     await self.play_sound(item, "sound")
                         else:
                             await message.channel.send(item)
+                            if self.current_channel != None:
+                                engine.save_to_file(item,"sounds/message.mp3")
+                                engine.runAndWait() 
+                                await self.play_sound("message.mp3", "sound")
                         i+=1
             if "play" in message.content.lower():
                 content = message.content.lower()[5:]
