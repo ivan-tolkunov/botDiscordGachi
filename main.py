@@ -11,7 +11,7 @@ engine = pyttsx3.init()
 
 voices = engine.getProperty('voices')
 
-engine.setProperty('voice', 'ru')
+# engine.setProperty('voice', 'ru')
 
 WORDS = {"соси" : [None, "Sam sosi XD"],
          "фистинг" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"]
@@ -96,9 +96,11 @@ class MyClient(discord.Client):
                         else:
                             await message.channel.send(item)
                             if self.current_channel != None:
-                                engine.save_to_file(item,"sounds/message.mp3")
+                                engine.save_to_file(item,"sounds/message.wav")
+                                print("created")
                                 engine.runAndWait() 
-                                await self.play_sound("message.mp3", "sound")
+                                print("run")
+                                await self.play_sound("message.wav", "sound")
                         i+=1
             if "play" in message.content.lower():
                 content = message.content.lower()[5:]
