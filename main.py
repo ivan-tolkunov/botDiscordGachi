@@ -6,6 +6,13 @@ import asyncio
 import pyttsx3
 import os
 
+
+engine = pyttsx3.init()
+
+voices = engine.getProperty('voices')
+
+engine.setProperty('voice', 'ru')
+
 WORDS = {"соси" : [None, "Sam sosi XD"],
          "фистинг" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"]
 
@@ -99,15 +106,5 @@ class MyClient(discord.Client):
                 
                
 client = MyClient()
-
-# cl = commands.Bot(command_prefix="!")
-
-# @cl.command(pass_context = True)
-# async def play(ctx, url):
-#     server = ctx.message.server
-#     voice_client = cl.voice_client_in(server)
-#     player = await voice_client.create_ytdl_player(url)
-#     player.start()
-
 token = os.environ.get("BOT_TOKEN")
 client.run(str(token))
