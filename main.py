@@ -101,8 +101,8 @@ class MyClient(discord.Client):
                             if item != None:
                                 if self.current_channel != None:
                                     await self.play_sound(item, "sound")
-                        else:
-                            await message.channel.send(item)
+                        # else:
+                             # await message.channel.send(item)
                         i+=1
 
     async def play_sound(self, content, typ):
