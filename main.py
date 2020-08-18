@@ -78,7 +78,7 @@ class MyClient(discord.Client):
                 self.voice.play(discord.FFmpegPCMAudio(source=f"{MAIN_PATH}{content}"))
                 while self.voice.is_playing():
                     await asyncio.sleep(.1)
-                await os.remove(f"{MAIN_PATH}{content}")
+                os.remove(f"{MAIN_PATH}{content}")
                 print("delleted")
             # elif typ == "music":
             #     self.voice.play(discord.FFmpegPCMAudio(source=f"{content}"))
