@@ -121,9 +121,6 @@ class MyClient(discord.Client):
                
 client = MyClient()
 token = BOT_TOKEN
-try:
-    client.run(str(token))
-except:
-    asyncio.sleep(5)
-    client.run(str(token))
+asyncio.sleep(20)
+client.run(str(token))
 
