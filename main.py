@@ -5,7 +5,7 @@
 # Надо для работы в линуксе русских символов
 import sys
 sys.path.insert(1, '/home/linaro/')
-from token import BOT_TOKEN
+from t import BOT_TOKEN
 
 import discord
 import asyncio
