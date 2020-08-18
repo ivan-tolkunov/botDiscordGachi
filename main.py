@@ -14,42 +14,46 @@ import os
 
 
 WORDS = {"соси" : [None, "Sam sosi XD"],
-         "фистинг" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-         "пенетрайшн" : ["8 differet Penetrationsounds.wav", "mmmmm    eeeeeee"],
-         "анал" : ["Anal.wav", "mmmmm    eeeeeee"],
-         "сее" : ["Do you like what you see.mp3", "mmmmm    eeeeeee"],
-         "данжн" : ["Dungeon master.mp3", "mmmmm    eeeeeee"],
-         "300" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-         "фак" : ["FUCK YOU.wav", "mmmmm    eeeeeee"],
-         "слейвс" : ["Fuckin Slaves.wav", "mmmmm    eeeeeee"],
-         "дееп" : ["It's so fucking deep.mp3", "mmmmm    eeeeeee"],
-         "камм" : ["Make me cum.wav", "mmmmm    eeeeeee"],
-         "сори" : ["Oh Shit Im Sorry.wav", "mmmmm    eeeeeee"],
-         "фор" : ["Sorry for what.wav", "mmmmm    eeeeeee"],
-         "каминг" : ["Ooouuuuh Im fucking cumming.wav", "mmmmm    eeeeeee"],
-         "фингер" : ["Stick your finger.mp3", "mmmmm    eeeeeee"],
-         "сволов" : ["Swallow my cum.mp3", "mmmmm    eeeeeee"],
-         "бой" : ["Take it boy.mp3", "mmmmm    eeeeeee"],
 
-        #  "suck" : [None, "Sam sosi XD"],
-        #  "fisting" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "penetrationsounds" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "анал" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "сее" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "данжн" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "300" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "фак" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "слейвс" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "каминг" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "дееп" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "камм" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "сори" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "камингг" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "фингер" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "сволов" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
-        #  "бой" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
+         "пенетрайшн" : ["8 differet Penetrationsounds.wav", ""],
+         "анал" : ["Anal.wav", ""],
+         "сее" : ["Do you like what you see.mp3", ""],
+         "данжн" : ["Dungeon master.mp3", ""],
+         "300" : ["Fisting is 300.mp3", ""],
+         "фак" : ["FUCK YOU.wav", ""],
+         "слейвс" : ["Fuckin Slaves.wav", ""],
+         "дееп" : ["It's so fucking deep.mp3", ""],
+         "камм" : ["Make me cum.wav", ""],
+         "сори" : ["Oh Shit Im Sorry.wav", ""],
+         "фор" : ["Sorry for what.wav", ""],
+         "каминг" : ["Ooouuuuh Im fucking cumming.wav", ""],
+         "фингер" : ["Stick your finger.mp3", ""],
+         "сволов" : ["Swallow my cum.mp3", ""],
+         "бой" : ["Take it boy.mp3", ""],
 
+        "suck" : [None, "Sam sosi XD"],
+}
 
+MESSAGE = 745396711794409593
+
+CHANNEL = 745394748147105843
+
+EMOTIONS = {
+'🎶' : "8 differet Penetrationsounds.wav",
+'⭕' : "Anal.wav",
+'👀' : "Do you like what you see.mp3",
+'⛰️' : "Dungeon master.mp3",
+'✊' : "Fisting is 300.mp3",
+'📣' : "FUCK YOU.wav",
+'⛓️' : "Fuckin Slaves.wav",
+'🥖' : "It's so fucking deep.mp3",
+'😳' : "Make me cum.wav",
+'😰' : "Oh Shit Im Sorry.wav",
+'😏' : "Sorry for what.wav",
+'🎆' : "Ooouuuuh Im fucking cumming.wav",
+'👍' : "Stick your finger.mp3",
+'🥛' : "Swallow my cum.mp3",
+'🤝' : "Take it boy.mp3",
 }
 
 MAIN_PATH = "/home/linaro/botDiscordGachi/sounds/"
@@ -67,9 +71,20 @@ class MyClient(discord.Client):
                     self.voice_channel_list.append(channel) # Беру список всех голосовых каналов кроме афк и записываю в переменную
         # print(voice_channel_list)
 
+        await self.ch_reactions()
+
         print('Logged on as {0}!'.format(self.user.display_name))
         await self.check() # Запускаю выполнение функции проверки
     
+    async def ch_reactions(self):
+        channel = client.get_channel(CHANNEL)
+        msg = await channel.fetch_message(MESSAGE)
+        if len(msg.reactions)!=len(EMOTIONS):
+            for r in msg.reactions:
+                await r.clear()
+            for key in EMOTIONS:
+                await msg.add_reaction(key)
+
     async def check(self): # Функция проверки
         
         while self.current_channel == None: # Пока бот не зашел не в один канал
@@ -93,6 +108,17 @@ class MyClient(discord.Client):
                     self.current_channel = None
                     await self.check()
 
+    async def play_sound(self, content, typ):
+        if self.voice != None:
+            if typ == "sound":
+                # print(f"{MAIN_PATH}{content}")
+                self.voice.play(discord.FFmpegPCMAudio(source=f"{MAIN_PATH}{content}"))
+                while self.voice.is_playing():
+                    await asyncio.sleep(.1)   
+        else:
+            await self.check()
+            print("Bot not in voice room")
+                
     async def on_message(self, message):
         if message.author != self.user:
             for key in WORDS:
@@ -106,19 +132,20 @@ class MyClient(discord.Client):
                         # else:
                              # await message.channel.send(item)
                         i+=1
+        if message.channel.id == CHANNEL:
+            await message.delete(delay=5)  
 
-    async def play_sound(self, content, typ):
-        if self.voice != None:
-            if typ == "sound":
-                # print(f"{MAIN_PATH}{content}")
-                self.voice.play(discord.FFmpegPCMAudio(source=f"{MAIN_PATH}{content}"))
-                while self.voice.is_playing():
-                    await asyncio.sleep(.1)   
-        else:
-            await self.check()
-            print("Bot not in voice room")
-                
-               
+
+    async def on_raw_reaction_add(self, payload):
+        if payload.message_id == MESSAGE:
+            sound = EMOTIONS[str(payload.emoji)]
+            await self.play_sound(sound, "sound")
+
+    async def on_raw_reaction_remove(self, payload):
+        if payload.message_id == MESSAGE:
+            sound = EMOTIONS[str(payload.emoji)]
+            await self.play_sound(sound, "sound")
+
 client = MyClient()
 token = BOT_TOKEN
 client.run(str(token))
