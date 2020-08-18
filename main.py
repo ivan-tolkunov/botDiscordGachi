@@ -48,15 +48,14 @@ WORDS = {"соси" : [None, "Sam sosi XD"],
         #  "бой" : ["Fisting is 300.mp3", "mmmmm    eeeeeee"],
 
 
-} # Добавляю словарь команд
+}
 
-MAIN_PATH = "sounds/" # Указываю путь к папке с звуками
+MAIN_PATH = "sounds/"
 
-class MyClient(discord.Client): # Создаю класс бота
+class MyClient(discord.Client):
 
-    async def on_ready(self): # Функция выполняется при запуске бота
-
-        self.voice_channel_list = [] # Создаю переменные обьекта
+    async def on_ready(self):
+        self.voice_channel_list = []
         self.current_channel = None
         self.voice = None
 
