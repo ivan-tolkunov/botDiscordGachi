@@ -3,7 +3,7 @@
 
 
 # Надо для работы в линуксе русских символов
-
+from /home/linaro/token.py import BOT_TOKEN
 
 import discord
 import asyncio
@@ -118,5 +118,5 @@ class MyClient(discord.Client):
                 
                
 client = MyClient()
-token = os.environ.get("BOT_TOKEN")
+token = BOT_TOKEN
 client.run(str(token))
