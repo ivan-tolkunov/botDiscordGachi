@@ -73,6 +73,13 @@ class MyClient(discord.Client):
                 self.voice.play(discord.FFmpegPCMAudio(source=f"{MAIN_PATH}{content}"))
                 while self.voice.is_playing():
                     await asyncio.sleep(.1)
+            elif typ == "message":
+                # print(f"{MAIN_PATH}{content}")
+                self.voice.play(discord.FFmpegPCMAudio(source=f"{MAIN_PATH}{content}"))
+                while self.voice.is_playing():
+                    await asyncio.sleep(.1)
+                await os.remove(f"{MAIN_PATH}{content}")
+                print("delleted")
             # elif typ == "music":
             #     self.voice.play(discord.FFmpegPCMAudio(source=f"{content}"))
             #     while self.voice.is_playing():
@@ -100,7 +107,7 @@ class MyClient(discord.Client):
                                 print("created")
                                 engine.runAndWait() 
                                 print("run")
-                                await self.play_sound("message.wav", "sound")
+                                await self.play_sound("message.wav", "message")
                         i+=1
             if "play" in message.content.lower():
                 content = message.content.lower()[5:]
