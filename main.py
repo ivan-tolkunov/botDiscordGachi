@@ -12,6 +12,7 @@ import asyncio
 import pyttsx3
 import os
 import random
+from time import time
 
 
 WORDS = {"соси" : [None, "Sam sosi XD"],
@@ -81,8 +82,12 @@ class MyClient(discord.Client):
         await self.check() # Запускаю выполнение функции проверки
 
     async def random(self):
+        random.seed(time())
         rn = random.choice(list(EMOTIONS.values()))
-        print(rn)
+        if rn != "RANDOM" and rn != "OFF":
+            await self.play_sound(rn, "sound")
+        else:
+            await self.random()
 
 
     async def ch_reactions(self):
