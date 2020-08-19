@@ -157,7 +157,7 @@ class MyClient(discord.Client):
             if sound == "RANDOM":
                 await self.random()
             elif sound == "OFF":
-                pass
+                self.is_on = not self.is_on
             else:
                 await self.play_sound(sound, "sound")
 
@@ -167,7 +167,7 @@ class MyClient(discord.Client):
             if sound == "RANDOM":
                 await self.random()
             elif sound == "OFF":
-                pass
+                self.is_on = not self.is_on
             else:
                 await self.play_sound(sound, "sound")
 
