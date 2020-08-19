@@ -132,8 +132,7 @@ class MyClient(discord.Client):
                 if len(ch.members) > 1 and self.is_on:
                     i+=2
                     random.seed(time())
-                    print(i)
-                    if i >= random.randint(2,10):
+                    if i >= random.randint(60,300):
                         await self.random()
                         i=0
                     await asyncio.sleep(2)
@@ -150,7 +149,7 @@ class MyClient(discord.Client):
         if self.voice != None:
             if typ == "sound":
                 # print(f"{MAIN_PATH}{content}")
-                self.voice.play(discord.FFmpegPCMAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source=f"{MAIN_PATH}{content}"))
+                self.voice.play(discord.FFmpegPCMAudio(source=f"{MAIN_PATH}{content}"))
                 while self.voice.is_playing():
                     await asyncio.sleep(.1)   
         else:
