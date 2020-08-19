@@ -157,7 +157,22 @@ class MyClient(discord.Client):
             if sound == "RANDOM":
                 await self.random()
             elif sound == "OFF":
-                self.is_on = not self.is_on
+                if self.is_on:
+                    self.is_on = not self.is_on
+                    channel = client.get_channel(CHANNEL)
+                    msg = await channel.fetch_message(MESSAGE)
+                    await msg.remove_reaction(str(payload.emoji), self.user)
+                    await msg.add_reaction('🔈')
+                    EMOTIONS['🔈'] = EMOTIONS.pop('🔇')
+                    print(EMOTIONS)
+                else:
+                    self.is_on = not self.is_on
+                    channel = client.get_channel(CHANNEL)
+                    msg = await channel.fetch_message(MESSAGE)
+                    await msg.remove_reaction(str(payload.emoji), self.user)
+                    await msg.add_reaction('🔇')
+                    EMOTIONS['🔇'] = EMOTIONS.pop('🔈')
+                    print(EMOTIONS)
             else:
                 await self.play_sound(sound, "sound")
 
