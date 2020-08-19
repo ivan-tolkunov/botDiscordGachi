@@ -75,17 +75,21 @@ class MyClient(discord.Client):
                 if channel.id != 734866467128082475:
                     self.voice_channel_list.append(channel) # Беру список всех голосовых каналов кроме афк и записываю в переменную
         # print(voice_channel_list)
-
         await self.ch_reactions()
-
         print('Logged on as {0}!'.format(self.user.display_name))
         await self.check() # Запускаю выполнение функции проверки
+
+
 
     async def random(self):
         random.seed(time())
         rn = random.choice(list(EMOTIONS.values()))
         if rn != "RANDOM" and rn != "OFF":
-            await self.play_sound(rn, "sound")
+            try:
+                await self.play_sound(rn, "sound")
+            except Exception as ex:
+                print(ex)
+                pass
         else:
             await self.random()
 
@@ -93,11 +97,18 @@ class MyClient(discord.Client):
     async def ch_reactions(self):
         channel = client.get_channel(CHANNEL)
         msg = await channel.fetch_message(MESSAGE)
-        if len(msg.reactions)!=len(EMOTIONS):
+        for r in msg.reactions:
+            if r.emoji == '🔈':
+                for r in msg.reactions:
+                    await r.clear()
+                for key in EMOTIONS:
+                    await msg.add_reaction(key)
+        if len(msg.reactions) != len(EMOTIONS):
             for r in msg.reactions:
                 await r.clear()
             for key in EMOTIONS:
                 await msg.add_reaction(key)
+
 
     async def check(self): # Функция проверки
         
@@ -105,35 +116,48 @@ class MyClient(discord.Client):
             if self.is_on:
                 for ch in reversed(self.voice_channel_list): # идем по списку каналов в обратном порядке, чтобы главной был первым
                     if ch.members: # Если в канале есть люди
+                        print(f"connecting to -> {ch.name}")
                         await self.conn(ch) # Вызываем функцию подключения
-                        print(f"connected to -> {ch.name}")
+                        
             await asyncio.sleep(2) # Ждем 2 секунды
+
 
     async def conn(self, ch): # Функция подключения
             vc = await ch.connect() 
             self.voice = vc
             self.current_channel = ch # Подключаемся к каналу
+            print(f"connected to -> {ch.name}")
+            i=0
             while self.current_channel != None: # Пока подключены
-                if len(ch.members) > 1 and self.is_on: # 
+                if len(ch.members) > 1 and self.is_on:
+                    i+=2
+                    random.seed(time())
+                    print(i)
+                    if i >= random.randint(2,10):
+                        await self.random()
+                        i=0
                     await asyncio.sleep(2)
                 else:
+                    print(f"disconnected from -> {ch.name}")
                     await self.voice.disconnect()
                     await asyncio.sleep(2)
                     self.voice = None
                     self.current_channel = None
                     await self.check()
 
+
     async def play_sound(self, content, typ):
         if self.voice != None:
             if typ == "sound":
                 # print(f"{MAIN_PATH}{content}")
-                self.voice.play(discord.FFmpegPCMAudio(source=f"{MAIN_PATH}{content}"))
+                self.voice.play(discord.FFmpegPCMAudio(executable="C:/ffmpeg/bin/ffmpeg.exe", source=f"{MAIN_PATH}{content}"))
                 while self.voice.is_playing():
                     await asyncio.sleep(.1)   
         else:
             await self.check()
             print("Bot not in voice room")
-                
+
+
     async def on_message(self, message):
         if message.author != self.user:
             for key in WORDS:
@@ -152,39 +176,57 @@ class MyClient(discord.Client):
 
 
     async def on_raw_reaction_add(self, payload):
-        if payload.message_id == MESSAGE:
-            sound = EMOTIONS[str(payload.emoji)]
-            if sound == "RANDOM":
-                await self.random()
-            elif sound == "OFF":
-                if self.is_on:
-                    self.is_on = not self.is_on
-                    channel = client.get_channel(CHANNEL)
-                    msg = await channel.fetch_message(MESSAGE)
-                    await msg.remove_reaction(str(payload.emoji), self.user)
-                    await msg.add_reaction('🔈')
-                    EMOTIONS['🔈'] = EMOTIONS.pop('🔇')
-                    print(EMOTIONS)
+        if payload.user_id != self.user.id:
+            if payload.message_id == MESSAGE:
+                sound = EMOTIONS[str(payload.emoji)]
+                if sound == "RANDOM":
+                    await self.random()
+                elif sound == "OFF":
+                    if self.is_on:
+                        self.is_on = not self.is_on
+                        channel = client.get_channel(CHANNEL)
+                        msg = await channel.fetch_message(MESSAGE)
+                        await msg.clear_reaction(str(payload.emoji))
+                        await msg.add_reaction('🔈')
+                        EMOTIONS['🔈'] = EMOTIONS['🔇']
+                        del EMOTIONS['🔇']
+                    else:
+                        self.is_on = not self.is_on
+                        channel = client.get_channel(CHANNEL)
+                        msg = await channel.fetch_message(MESSAGE)
+                        await msg.clear_reaction(str(payload.emoji))
+                        await msg.add_reaction('🔇')
+                        EMOTIONS['🔇'] = EMOTIONS['🔈']
+                        del EMOTIONS['🔈']
                 else:
-                    self.is_on = not self.is_on
-                    channel = client.get_channel(CHANNEL)
-                    msg = await channel.fetch_message(MESSAGE)
-                    await msg.remove_reaction(str(payload.emoji), self.user)
-                    await msg.add_reaction('🔇')
-                    EMOTIONS['🔇'] = EMOTIONS.pop('🔈')
-                    print(EMOTIONS)
-            else:
-                await self.play_sound(sound, "sound")
+                    await self.play_sound(sound, "sound")
+
 
     async def on_raw_reaction_remove(self, payload):
-        if payload.message_id == MESSAGE:
-            sound = EMOTIONS[str(payload.emoji)]
-            if sound == "RANDOM":
-                await self.random()
-            elif sound == "OFF":
-                self.is_on = not self.is_on
-            else:
-                await self.play_sound(sound, "sound")
+        if payload.user_id != self.user.id:
+            if payload.message_id == MESSAGE:
+                sound = EMOTIONS[str(payload.emoji)]
+                if sound == "RANDOM":
+                    await self.random()
+                elif sound == "OFF":
+                    if self.is_on:
+                        self.is_on = not self.is_on
+                        channel = client.get_channel(CHANNEL)
+                        msg = await channel.fetch_message(MESSAGE)
+                        await msg.clear_reaction(str(payload.emoji))
+                        await msg.add_reaction('🔈')
+                        EMOTIONS['🔈'] = EMOTIONS['🔇']
+                        del EMOTIONS['🔇']
+                    else:
+                        self.is_on = not self.is_on
+                        channel = client.get_channel(CHANNEL)
+                        msg = await channel.fetch_message(MESSAGE)
+                        await msg.clear_reaction(str(payload.emoji))
+                        await msg.add_reaction('🔇')
+                        EMOTIONS['🔇'] = EMOTIONS['🔈']
+                        del EMOTIONS['🔈']
+                else:
+                    await self.play_sound(sound, "sound")
 
 client = MyClient()
 token = BOT_TOKEN
