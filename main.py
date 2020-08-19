@@ -11,6 +11,7 @@ import discord
 import asyncio
 import pyttsx3
 import os
+import random
 
 
 WORDS = {"соси" : [None, "Sam sosi XD"],
@@ -54,6 +55,8 @@ EMOTIONS = {
 '👍' : "Stick your finger.mp3",
 '🥛' : "Swallow my cum.mp3",
 '🤝' : "Take it boy.mp3",
+'🔀' : "RANDOM",
+'🔇' : "OFF",
 }
 
 MAIN_PATH = "/home/linaro/botDiscordGachi/sounds/"
@@ -64,6 +67,7 @@ class MyClient(discord.Client):
         self.voice_channel_list = []
         self.current_channel = None
         self.voice = None
+        self.is_on = True
 
         for guild in self.guilds:
             for channel in guild.voice_channels:
@@ -75,7 +79,12 @@ class MyClient(discord.Client):
 
         print('Logged on as {0}!'.format(self.user.display_name))
         await self.check() # Запускаю выполнение функции проверки
-    
+
+    async def random(self):
+        rn = random.choice(list(EMOTIONS.values()))
+        print(rn)
+
+
     async def ch_reactions(self):
         channel = client.get_channel(CHANNEL)
         msg = await channel.fetch_message(MESSAGE)
@@ -88,10 +97,11 @@ class MyClient(discord.Client):
     async def check(self): # Функция проверки
         
         while self.current_channel == None: # Пока бот не зашел не в один канал
-            for ch in reversed(self.voice_channel_list): # идем по списку каналов в обратном порядке, чтобы главной был первым
-                if ch.members: # Если в канале есть люди
-                    await self.conn(ch) # Вызываем функцию подключения
-                    print(f"connected to -> {ch.name}")
+            if self.is_on:
+                for ch in reversed(self.voice_channel_list): # идем по списку каналов в обратном порядке, чтобы главной был первым
+                    if ch.members: # Если в канале есть люди
+                        await self.conn(ch) # Вызываем функцию подключения
+                        print(f"connected to -> {ch.name}")
             await asyncio.sleep(2) # Ждем 2 секунды
 
     async def conn(self, ch): # Функция подключения
@@ -99,7 +109,7 @@ class MyClient(discord.Client):
             self.voice = vc
             self.current_channel = ch # Подключаемся к каналу
             while self.current_channel != None: # Пока подключены
-                if len(ch.members) > 1: # 
+                if len(ch.members) > 1 and self.is_on: # 
                     await asyncio.sleep(2)
                 else:
                     await self.voice.disconnect()
@@ -139,12 +149,22 @@ class MyClient(discord.Client):
     async def on_raw_reaction_add(self, payload):
         if payload.message_id == MESSAGE:
             sound = EMOTIONS[str(payload.emoji)]
-            await self.play_sound(sound, "sound")
+            if sound == "RANDOM":
+                self.random()
+            elif sound == "OFF":
+                pass
+            else:
+                await self.play_sound(sound, "sound")
 
     async def on_raw_reaction_remove(self, payload):
         if payload.message_id == MESSAGE:
             sound = EMOTIONS[str(payload.emoji)]
-            await self.play_sound(sound, "sound")
+            if sound == "RANDOM":
+                self.random()
+            elif sound == "OFF":
+                pass
+            else:
+                await self.play_sound(sound, "sound")
 
 client = MyClient()
 token = BOT_TOKEN
