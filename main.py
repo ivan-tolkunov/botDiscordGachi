@@ -155,7 +155,7 @@ class MyClient(discord.Client):
         if payload.message_id == MESSAGE:
             sound = EMOTIONS[str(payload.emoji)]
             if sound == "RANDOM":
-                self.random()
+                await self.random()
             elif sound == "OFF":
                 pass
             else:
@@ -165,7 +165,7 @@ class MyClient(discord.Client):
         if payload.message_id == MESSAGE:
             sound = EMOTIONS[str(payload.emoji)]
             if sound == "RANDOM":
-                self.random()
+                await self.random()
             elif sound == "OFF":
                 pass
             else:
