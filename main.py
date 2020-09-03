@@ -13,6 +13,7 @@ import pyttsx3
 import os
 import random
 from time import time
+import socket
 
 
 WORDS = {"соси" : [None, "Sam sosi XD"],
@@ -61,6 +62,11 @@ EMOTIONS = {
 }
 
 MAIN_PATH = "/home/linaro/botDiscordGachi/sounds/"
+
+sock = socket.socket()
+sock.settimeout(1)
+sock.bind(('192.168.0.200', 3228))
+sock.listen(1)
 
 class MyClient(discord.Client):
 
@@ -130,6 +136,20 @@ class MyClient(discord.Client):
             i=0
             while self.current_channel != None: # Пока подключены
                 if len(ch.members) > 1 and self.is_on:
+                    try:
+                        conn, addr = sock.accept()
+                        print ('connected:', addr)
+                        data = conn.recv(128)
+                        if data:
+                            for key in WORDS:
+                                if key in data.decode("utf-8"):
+                                    if WORDS[key][0]:
+                                        await self.play_sound(WORDS[key][0], "sound")
+                            conn.send(data.decode("utf-8"))
+                        conn.close()
+                    except Exception:
+                        pass
+
                     i+=2
                     random.seed(time())
                     if i >= random.randint(60,300):
