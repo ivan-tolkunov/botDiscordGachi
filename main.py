@@ -139,13 +139,17 @@ class MyClient(discord.Client):
                     try:
                         conn, addr = sock.accept()
                         print ('connected:', addr)
-                        data = conn.recv(128)
-                        if data:
-                            for key in WORDS:
-                                if key in data.decode("utf-8"):
-                                    if WORDS[key][0]:
-                                        await self.play_sound(WORDS[key][0], "sound")
-                            conn.send(data.decode("utf-8"))
+                        while True:
+                            data = conn.recv(2048)
+                            if data:
+                                for key in WORDS:
+                                    if key in data.decode("utf-8"):
+                                        if WORDS[key][0]:
+                                            await self.play_sound(WORDS[key][0], "sound")
+                            else:
+                                break
+                            conn.send("200".encode("utf-8"))
+                        print("disconnected")
                         conn.close()
                     except Exception:
                         pass
