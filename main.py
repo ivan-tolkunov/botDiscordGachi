@@ -3,9 +3,13 @@
 
 
 # Надо для работы в линуксе русских символов
+import ASUS.GPIO as GPIO
 import sys
 sys.path.insert(1, '/home/linaro/')
 from t import BOT_TOKEN
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.ASUS)
 
 import discord
 import asyncio
@@ -119,13 +123,16 @@ class MyClient(discord.Client):
     async def check(self): # Функция проверки
         
         while self.current_channel == None: # Пока бот не зашел не в один канал
+            GPIO.output(166, GPIO.HIGH)
             if self.is_on:
                 for ch in reversed(self.voice_channel_list): # идем по списку каналов в обратном порядке, чтобы главной был первым
                     if ch.members: # Если в канале есть люди
                         print(f"connecting to -> {ch.name}")
                         await self.conn(ch) # Вызываем функцию подключения
-                        
-            await asyncio.sleep(2) # Ждем 2 секунды
+
+            await asyncio.sleep(1)
+            GPIO.output(166, GPIO.LOW)         
+            await asyncio.sleep(1)
 
 
     async def conn(self, ch): # Функция подключения
