@@ -7,9 +7,6 @@ import sys
 sys.path.insert(1, '/home/linaro/')
 from t import BOT_TOKEN
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.ASUS)
-
 import discord
 import asyncio
 import pyttsx3
